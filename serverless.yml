@@ -1,0 +1,40 @@
+service: mj-handson
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+
+plugins:
+  - serverless-iam-roles-per-function
+
+functions:
+  MJConsumer:
+    handler: functions/consumer.handler
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - kinesis:*
+        Resource: !GetAtt MJKinesisDataStream.Arn
+    events:
+      - stream:
+          type: kinesis
+          arn: !GetAtt MJKinesisDataStream.Arn
+          batchSize: 50
+          batchWindow: 5
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    MJKinesisDataStream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        ShardCount: 1
+        StreamModeDetails:
+          StreamMode: PROVISIONED
+  Outputs:
+    Output:
+      Description: "Kinesis stream name"
+      Value: !Ref MJKinesisDataStream

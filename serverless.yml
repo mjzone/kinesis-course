@@ -1,4 +1,4 @@
-service: mj-handson
+service: KP1
 frameworkVersion: "3"
 
 provider:
@@ -11,24 +11,27 @@ plugins:
   - serverless-iam-roles-per-function
 
 functions:
-  MJConsumer:
+  KP1Consumer:
     handler: functions/consumer.handler
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-          - kinesis:*
-        Resource: !GetAtt MJKinesisDataStream.Arn
+          - kinesis:DescribeStream
+          - kinesis:DescribeStreamSummary
+          - kinesis:GetRecords
+          - kinesis:GetShardIterator
+          - kinesis:ListShards
+          - kinesis:ListStreams
+          - kinesis:SubscribeToShard
+        Resource: !GetAtt KP1DataStream.Arn
     events:
       - stream:
           type: kinesis
-          arn: !GetAtt MJKinesisDataStream.Arn
-          batchSize: 50
-          batchWindow: 5
+          arn: !GetAtt KP1DataStream.Arn
 
-# you can add CloudFormation resource templates here
 resources:
   Resources:
-    MJKinesisDataStream:
+    KP1KinesisDataStream:
       Type: AWS::Kinesis::Stream
       Properties:
         ShardCount: 1
@@ -37,4 +40,4 @@ resources:
   Outputs:
     Output:
       Description: "Kinesis stream name"
-      Value: !Ref MJKinesisDataStream
+      Value: !Ref KP1DataStream

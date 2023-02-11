@@ -4,7 +4,7 @@ const kinesis = new AWS.Kinesis({
   region: "us-east-1",
 });
 
-const streamName = "mj-handson-dev-MJKinesisDataStream-5k0dn3hIAaxh";
+const streamName = "<stream_name>";
 
 function generateTelemetry() {
   setInterval(() => {
@@ -15,7 +15,7 @@ function generateTelemetry() {
 
     const params = {
       Data: JSON.stringify(telemetry),
-      PartitionKey: "partitionKey",
+      PartitionKey: "1234",
       StreamName: streamName,
     };
 

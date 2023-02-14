@@ -28,10 +28,12 @@ functions:
       - stream:
           type: kinesis
           arn: !GetAtt KP1DataStream.Arn
+          batchSize: 10
+          batchWindow: 10
 
 resources:
   Resources:
-    KP1KinesisDataStream:
+    KP1DataStream:
       Type: AWS::Kinesis::Stream
       Properties:
         ShardCount: 1

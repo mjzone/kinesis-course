@@ -4,7 +4,7 @@ const kinesis = new AWS.Kinesis({
   region: "us-east-1",
 });
 
-const streamName = "<stream_name>";
+const streamName = "<stream-name-here>";
 
 function generateTelemetry() {
   setInterval(() => {

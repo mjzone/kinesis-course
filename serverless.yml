@@ -36,7 +36,7 @@ resources:
     KP1DataStream:
       Type: AWS::Kinesis::Stream
       Properties:
-        ShardCount: 1
+        ShardCount: 2
         StreamModeDetails:
           StreamMode: PROVISIONED
   Outputs:

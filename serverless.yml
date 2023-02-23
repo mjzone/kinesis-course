@@ -30,13 +30,14 @@ functions:
           arn: !GetAtt KP1DataStream.Arn
           batchSize: 10
           batchWindow: 10
+          parallelizationFactor: 10
 
 resources:
   Resources:
     KP1DataStream:
       Type: AWS::Kinesis::Stream
       Properties:
-        ShardCount: 2
+        ShardCount: 1
         StreamModeDetails:
           StreamMode: PROVISIONED
   Outputs:

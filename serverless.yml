@@ -13,6 +13,8 @@ plugins:
 functions:
   KP1Consumer:
     handler: functions/consumer.handler
+    environment:
+      TELEMETRY_TABLE_NAME: !Ref KP1TelemetryTable
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -24,22 +26,41 @@ functions:
           - kinesis:ListStreams
           - kinesis:SubscribeToShard
         Resource: !GetAtt KP1DataStream.Arn
+      - Effect: "Allow"
+        Action:
+          - dynamodb:BatchWriteItem
+        Resource: !GetAtt KP1TelemetryTable.Arn
     events:
       - stream:
           type: kinesis
           arn: !GetAtt KP1DataStream.Arn
-          batchSize: 10
+          parallelizationFactor: 1
+          batchSize: 100
           batchWindow: 10
-          parallelizationFactor: 10
-
+          tumblingWindowInSeconds: 30
+          
 resources:
   Resources:
     KP1DataStream:
       Type: AWS::Kinesis::Stream
       Properties:
-        ShardCount: 1
+        ShardCount: 3
         StreamModeDetails:
           StreamMode: PROVISIONED
+    KP1TelemetryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        KeySchema:
+          - AttributeName: siteId
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: siteId
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: S
   Outputs:
     Output:
       Description: "Kinesis stream name"

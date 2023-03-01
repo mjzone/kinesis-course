@@ -4,9 +4,9 @@ const kinesis = new AWS.Kinesis({
   region: "us-east-1",
 });
 
-const streamName = "KP1-dev-KP1DataStream-2pRyMzFl9Ztl";
+const streamName = "KP1-dev-KP1DataStream-nTKr77JCoo93";
 
-function generateTelemetry(pk) {
+function generateTelemetry(siteId) {
   setInterval(() => {
     const temperature = 20 + Math.random() * 10;
     const wind = Math.random() * 10;
@@ -15,7 +15,7 @@ function generateTelemetry(pk) {
 
     const params = {
       Data: JSON.stringify(telemetry),
-      PartitionKey: pk,
+      PartitionKey: siteId,
       StreamName: streamName,
     };
 
@@ -29,6 +29,6 @@ function generateTelemetry(pk) {
   }, 500);
 }
 
-generateTelemetry("1234");
-generateTelemetry("5678");
-generateTelemetry("abc");
+generateTelemetry("S01");
+generateTelemetry("S02");
+generateTelemetry("S03");

@@ -4,7 +4,7 @@ const kinesis = new AWS.Kinesis({
   region: "us-east-1",
 });
 
-const streamName = "KP1-dev-KP1DataStream-nTKr77JCoo93";
+const streamName = "KP1-dev-KP1DataStream-o34BQxgElZB9";
 
 function generateTelemetry(siteId) {
   setInterval(() => {
@@ -30,5 +30,3 @@ function generateTelemetry(siteId) {
 }
 
 generateTelemetry("S01");
-generateTelemetry("S02");
-generateTelemetry("S03");

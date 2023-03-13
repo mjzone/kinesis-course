@@ -34,17 +34,15 @@ functions:
       - stream:
           type: kinesis
           arn: !GetAtt KP1DataStream.Arn
-          parallelizationFactor: 1
           batchSize: 100
           batchWindow: 10
-          tumblingWindowInSeconds: 30
           
 resources:
   Resources:
     KP1DataStream:
       Type: AWS::Kinesis::Stream
       Properties:
-        ShardCount: 3
+        ShardCount: 2
         StreamModeDetails:
           StreamMode: PROVISIONED
     KP1TelemetryTable:

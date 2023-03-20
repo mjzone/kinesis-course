@@ -4,7 +4,8 @@ const kinesis = new AWS.Kinesis({
   region: "us-east-1",
 });
 
-const streamName = "KP1-dev-KP1DataStream-o34BQxgElZB9";
+const streamName = "KP1-dev-KP1DataStream-zH47e6qZcRvQ";
+let i = 0;
 
 function generateTelemetry(siteId) {
   setInterval(() => {
@@ -12,6 +13,9 @@ function generateTelemetry(siteId) {
     const wind = Math.random() * 10;
     const pressure = 980 + Math.random() * 40;
     const telemetry = { temperature, wind, pressure };
+
+    if (i === 5) telemetry.error = true;
+    i++;
 
     const params = {
       Data: JSON.stringify(telemetry),

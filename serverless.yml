@@ -30,15 +30,31 @@ functions:
         Action:
           - dynamodb:BatchWriteItem
         Resource: !GetAtt KP1TelemetryTable.Arn
+      - Effect: "Allow"
+        Action:
+          - sqs:SendMessage
+        Resource: !GetAtt KP1DLQ.Arn
     events:
       - stream:
           type: kinesis
           arn: !GetAtt KP1DataStream.Arn
-          batchSize: 100
-          batchWindow: 10
-          
+          maximumRetryAttempts: 1
+          batchSize: 10
+          batchWindow: 100
+          destinations:
+            onFailure:
+              arn:
+                Fn::GetAtt:
+                  - KP1DLQ
+                  - Arn
+              type: sqs
+
 resources:
   Resources:
+    KP1DLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: "KP1DLQ"
     KP1DataStream:
       Type: AWS::Kinesis::Stream
       Properties:
